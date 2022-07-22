@@ -7,5 +7,6 @@ import java.util.Collection;
 
 public interface NotebookRepository extends JpaRepository<Notebook, Long> {
     Collection<Notebook> findByOwnerId(Long id);
+
     Collection<Notebook> findByOwnerUsername(String username);
 }

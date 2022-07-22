@@ -1,10 +1,10 @@
 package com.amalstack.api.notebooks.controller;
 
+import com.amalstack.api.notebooks.dto.AppUserInfoDto;
+import com.amalstack.api.notebooks.dto.AppUserRegistrationDto;
 import com.amalstack.api.notebooks.exception.AppUserNotFoundException;
 import com.amalstack.api.notebooks.exception.UsernameAlreadyExistsException;
 import com.amalstack.api.notebooks.model.AppUser;
-import com.amalstack.api.notebooks.dto.AppUserInfoDto;
-import com.amalstack.api.notebooks.dto.AppUserRegistrationDto;
 import com.amalstack.api.notebooks.repository.AppUserRepository;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
