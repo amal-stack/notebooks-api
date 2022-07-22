@@ -18,14 +18,14 @@ public record AppUserRegistrationDto(
         @NotBlank
         String confirmPassword) implements Serializable {
 
-        public boolean passwordMatches() {
-                return password.equals(confirmPassword);
-        }
+    public boolean passwordMatches() {
+        return password.equals(confirmPassword);
+    }
 
-        public AppUser toUser(PasswordEncoder encoder) {
-                if (!passwordMatches()) {
-                        throw new ValidationException("The password and confirm password fields do not match");
-                }
-                return new AppUser(email, name, encoder.encode(password));
+    public AppUser toUser(PasswordEncoder encoder) {
+        if (!passwordMatches()) {
+            throw new ValidationException("The password and confirm password fields do not match");
         }
+        return new AppUser(email, name, encoder.encode(password));
+    }
 }

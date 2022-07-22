@@ -23,19 +23,7 @@ public class Notebook {
     @JoinColumn(name = "app_user_id")
     private AppUser owner;
 
-    public AppUser getOwner() {
-        return owner;
-    }
-
-    public void setOwner(AppUser owner) {
-        this.owner = owner;
-    }
-
     public Notebook() {
-    }
-
-    public long getId() {
-        return id;
     }
 
     public Notebook(long id, String name, String description, LocalDateTime creationTime, AppUser owner) {
@@ -50,6 +38,18 @@ public class Notebook {
         this.description = description;
         this.creationTime = creationTime;
         this.owner = owner;
+    }
+
+    public AppUser getOwner() {
+        return owner;
+    }
+
+    public void setOwner(AppUser owner) {
+        this.owner = owner;
+    }
+
+    public long getId() {
+        return id;
     }
 
     public String getName() {

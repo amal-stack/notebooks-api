@@ -7,6 +7,10 @@ import org.springframework.security.core.userdetails.User;
 
 public final class OwnershipGuard {
 
+    private OwnershipGuard() {
+
+    }
+
     public static void throwIfNotebookNotOwned(User user, Notebook notebook) {
         if (isNotebookNotOwned(user, notebook)) {
             throw new ResourceNotOwnedException("Current user does not own the notebook with id " + notebook.getId());
@@ -30,9 +34,5 @@ public final class OwnershipGuard {
                 .getOwner()
                 .getUsername()
                 .equals(user.getUsername());
-    }
-
-    private OwnershipGuard() {
-
     }
 }
