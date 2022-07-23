@@ -39,7 +39,7 @@ public class AppUsersController {
     }
 
 
-    @GetMapping("/current")
+    @GetMapping
     public AppUserInfoDto current(@AuthenticationPrincipal User user) {
         return repository
                 .findByUsername(user.getUsername())
