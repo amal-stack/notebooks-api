@@ -2,4 +2,4 @@
 
 # Notebooks API
 
-A REST web service for the NotebooksFX app written in Spring Boot.
+A REST web service for the [NotebooksFX](https://github.com/amal-stack/notebooksfx) app written in Spring Boot.
