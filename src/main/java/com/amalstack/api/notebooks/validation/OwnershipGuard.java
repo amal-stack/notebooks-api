@@ -1,15 +1,12 @@
-package com.amalstack.api.notebooks.exception;
+package com.amalstack.api.notebooks.validation;
 
+import com.amalstack.api.notebooks.exception.ResourceNotOwnedException;
 import com.amalstack.api.notebooks.model.Notebook;
 import com.amalstack.api.notebooks.model.Page;
 import com.amalstack.api.notebooks.model.Section;
 import org.springframework.security.core.userdetails.User;
 
 public final class OwnershipGuard {
-
-    private OwnershipGuard() {
-
-    }
 
     public static void throwIfNotebookNotOwned(User user, Notebook notebook) {
         if (isNotebookNotOwned(user, notebook)) {
@@ -34,5 +31,9 @@ public final class OwnershipGuard {
                 .getOwner()
                 .getUsername()
                 .equals(user.getUsername());
+    }
+
+    private OwnershipGuard() {
+
     }
 }

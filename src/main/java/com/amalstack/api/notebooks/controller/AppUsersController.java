@@ -12,6 +12,8 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping(value = "users", produces = MediaType.APPLICATION_JSON_VALUE)
 public class AppUsersController {
@@ -25,7 +27,7 @@ public class AppUsersController {
     }
 
     @PostMapping
-    public AppUserInfoDto register(@RequestBody AppUserRegistrationDto appUserRegistrationDto) {
+    public AppUserInfoDto register(@RequestBody @Valid AppUserRegistrationDto appUserRegistrationDto) {
 
         String username = appUserRegistrationDto.email();
 
