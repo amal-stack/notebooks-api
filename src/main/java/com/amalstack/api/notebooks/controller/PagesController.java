@@ -2,7 +2,7 @@ package com.amalstack.api.notebooks.controller;
 
 import com.amalstack.api.notebooks.dto.PageDto;
 import com.amalstack.api.notebooks.dto.PageInfoDto;
-import com.amalstack.api.notebooks.exception.OwnershipGuard;
+import com.amalstack.api.notebooks.validation.OwnershipGuard;
 import com.amalstack.api.notebooks.exception.PageNotFoundByIdException;
 import com.amalstack.api.notebooks.exception.SectionNotFoundByIdException;
 import com.amalstack.api.notebooks.model.Page;

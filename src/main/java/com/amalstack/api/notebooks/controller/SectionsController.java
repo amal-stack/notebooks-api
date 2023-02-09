@@ -3,7 +3,7 @@ package com.amalstack.api.notebooks.controller;
 import com.amalstack.api.notebooks.dto.SectionDto;
 import com.amalstack.api.notebooks.dto.SectionInfoDto;
 import com.amalstack.api.notebooks.exception.NotebookNotFoundByIdException;
-import com.amalstack.api.notebooks.exception.OwnershipGuard;
+import com.amalstack.api.notebooks.validation.OwnershipGuard;
 import com.amalstack.api.notebooks.exception.SectionNotFoundByIdException;
 import com.amalstack.api.notebooks.model.Notebook;
 import com.amalstack.api.notebooks.model.Section;
