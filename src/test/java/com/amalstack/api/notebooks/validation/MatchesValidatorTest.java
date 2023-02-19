@@ -23,7 +23,6 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class MatchesValidatorTest {
-
     @Mock
     private Matches matches;
     @Mock
@@ -31,7 +30,6 @@ class MatchesValidatorTest {
     private MatchesValidator matchesValidator;
     private AutoCloseable closeable;
     private Properties validationMessages;
-
 
     @BeforeAll
     void init() throws IOException {
