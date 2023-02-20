@@ -23,32 +23,34 @@ class SectionRepositoryTest {
 
     @Autowired private NotebookRepository notebookRepository;
 
+    @Autowired
+    private PageRepository pageRepository;
+
     private TestData data;
     private long notebookId;
 
     @BeforeAll
     void init() {
-        data = new TestData();
-        appUserRepository.save(data.getAppUserWithNotebooks());
+        data = new TestData("SectionRepositoryTest");
+        data.saveToRepositories(appUserRepository, notebookRepository, sectionRepository, pageRepository);
 
-        notebookId = notebookRepository.save(data.getNotebookWithSections()).getId();
-
-        sectionRepository.save(data.getSection1WithPages());
-        sectionRepository.save(data.getSection2WithPages());
-        sectionRepository.save(data.getSectionWithoutPages());
+        notebookId = notebookRepository.save(
+                data.getNotebookWithSections())
+                .getId();
     }
 
     @Test
-    void findByNotebookId_whenNotebookExists_thenFindsSectionsByNotebookId() {
+    void findByNotebookId_whenNotebookContainsSections_thenFindsSectionsByNotebookId() {
         Collection<Section> sections = sectionRepository.findByNotebookId(notebookId);
-        assertThat(sections).hasSize(3);
+
+        assertThat(sections).hasSize(data.getSections().size());
         assertThat(sections)
                 .extracting(s -> s.getNotebook().getId())
                 .allMatch(i -> i.equals(notebookId));
     }
 
     @Test
-    void findByNotebookId_whenNotebookDoesNotExist_thenReturnsEmptyCollection() {
+    void findByNotebookId_whenNotebookContainsNoSections_thenReturnsEmptyCollection() {
         Collection<Section> sections = sectionRepository.findByNotebookId(
                 data.getNotebookWithoutSections().getId());
 
@@ -56,16 +58,39 @@ class SectionRepositoryTest {
     }
 
     @Test
-    void countByNotebookId_whenNotebookExists_thenCountsSectionsByNotebookId() {
+    void findByNotebookId_whenNotebookDoesNotExist_thenReturnsEmptyCollection() {
+        Collection<Section> sections = sectionRepository.findByNotebookId(data
+                .nonPersistent()
+                .notebook()
+                .getId());
+
+        assertThat(sections).isEmpty();
+    }
+
+    @Test
+    void countByNotebookId_whenNotebookContainsSections_thenCountsSectionsByNotebookId() {
         var sectionCount = sectionRepository.countByNotebookId(notebookId);
-        assertThat(sectionCount).isEqualTo(3);
+
+        assertThat(sectionCount).isEqualTo(data.getSections().size());
+    }
+
+    @Test
+    void countByNotebookId_whenNotebookContainsNoSections_thenReturns0() {
+        var sectionCount = sectionRepository.countByNotebookId(
+                data.getNotebookWithoutSections().getId()
+        );
+
+        assertThat(sectionCount).isZero();
     }
 
     @Test
     void countByNotebookId_whenNotebookDoesNotExist_thenReturns0() {
-        var sectionCount = sectionRepository.countByNotebookId(
-                data.getNotebookWithoutSections().getId()
+        var sectionCount = sectionRepository.countByNotebookId(data
+                .nonPersistent()
+                .notebook()
+                .getId()
         );
+
         assertThat(sectionCount).isZero();
     }
 }

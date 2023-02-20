@@ -10,13 +10,12 @@ import java.util.List;
 
 class TestData {
     private final AppUser appUserWithNotebooks = new AppUser(
-            "test1@example.com",
+            "Test1@example.com",
             "Test User With Notebooks",
             "password1"
     );
-
     private final AppUser appUserWithoutNotebooks = new AppUser(
-            "test2@example.com",
+            "Test2@example.com",
             "Test User Without Notebooks",
             "password2"
     );
@@ -25,7 +24,6 @@ class TestData {
             "Test Notebook Description",
             LocalDateTime.now(),
             appUserWithNotebooks);
-
     private final Notebook notebookWithNoSections = new Notebook("Test Notebook 2",
             "Test Notebook Description",
             LocalDateTime.now(),
@@ -35,13 +33,25 @@ class TestData {
     private final Section sectionWithPages2 = new Section("Test Section 1.2", notebookWithSections);
     private final Section sectionWithoutPages = new Section("Test Section 1.3", notebookWithSections);
 
-
     private final Page page111 = new Page("Test Page 1.1.1", "Page Contents", sectionWithPages1);
     private final Page page112 = new Page("Test Page 1.1.2", "Page Contents", sectionWithPages1);
     private final Page page121 = new Page("Test Page 1.1.3", "Page Contents", sectionWithPages2);
 
     private final List<Page> section1Pages = List.of(page111, page112);
     private final List<Page> section2Pages = List.of(page121);
+
+    private final NonPersistentData nonPersistentData = new NonPersistentData();
+
+    private boolean saved = false;
+
+    public TestData(String randomString) {
+        // Prefix each username with the supplied random string
+        getAppUsers().forEach(u -> u.setUsername(randomString + u.getUsername()));
+    }
+
+    public NonPersistentData nonPersistent() {
+        return nonPersistentData;
+    }
 
     public AppUser getAppUserWithNotebooks() {
         return appUserWithNotebooks;
@@ -78,4 +88,75 @@ class TestData {
     public List<Page> getSection2Pages() {
         return section2Pages;
     }
+
+    public List<AppUser> getAppUsers() {
+        return List.of(appUserWithNotebooks, appUserWithoutNotebooks);
+    }
+
+    public List<Notebook> getNotebooks() {
+        return List.of(notebookWithSections, notebookWithNoSections);
+    }
+
+    public List<Section> getSections() {
+        return List.of(sectionWithPages1, sectionWithPages2, sectionWithoutPages);
+    }
+
+    public List<Page> getPages() {
+        return List.of(page111, page112, page121);
+    }
+
+    public void saveToRepositories(AppUserRepository appUserRepository,
+                     NotebookRepository notebookRepository,
+                     SectionRepository sectionRepository,
+                     PageRepository pageRepository) {
+        appUserRepository.saveAll(getAppUsers());
+        notebookRepository.saveAll(getNotebooks());
+        sectionRepository.saveAll(getSections());
+        pageRepository.saveAll(getPages());
+        saved = true;
+    }
+
+    public boolean isSaved() {
+        return saved;
+    }
+
+    static class NonPersistentData {
+
+        private final AppUser appUser = new AppUser(-1L,
+                "nonpersistent@example.com",
+                "Non-persistent User",
+                "password");
+        private final Notebook notebook = new Notebook(-1L,
+                "Non-persistent Notebook",
+                "Non-persistent Notebook",
+                LocalDateTime.now(),
+                appUser);
+        private final Section section = new Section(-1L,
+                "Non-persistent Section",
+                notebook);
+        private final Page page = new Page(-1L,
+                "Non-persistent page",
+                "Non-persistent Notebook",
+                section);
+
+        public AppUser appUser() {
+            return appUser;
+        }
+
+        public Notebook notebook() {
+            return notebook;
+        }
+
+        public Section section() {
+            return section;
+        }
+
+        public Page page() {
+            return page;
+        }
+
+        private NonPersistentData() {
+        }
+    }
+
 }
