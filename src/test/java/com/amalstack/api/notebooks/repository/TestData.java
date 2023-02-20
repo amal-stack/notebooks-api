@@ -24,22 +24,18 @@ class TestData {
             "Test Notebook Description",
             LocalDateTime.now(),
             appUserWithNotebooks);
+    private final Section sectionWithPages1 = new Section("Test Section 1.1", notebookWithSections);
+    private final Page page111 = new Page("Test Page 1.1.1", "Page Contents", sectionWithPages1);
+    private final Page page112 = new Page("Test Page 1.1.2", "Page Contents", sectionWithPages1);
+    private final List<Page> section1Pages = List.of(page111, page112);
+    private final Section sectionWithPages2 = new Section("Test Section 1.2", notebookWithSections);
+    private final Page page121 = new Page("Test Page 1.1.3", "Page Contents", sectionWithPages2);
+    private final List<Page> section2Pages = List.of(page121);
+    private final Section sectionWithoutPages = new Section("Test Section 1.3", notebookWithSections);
     private final Notebook notebookWithNoSections = new Notebook("Test Notebook 2",
             "Test Notebook Description",
             LocalDateTime.now(),
             appUserWithNotebooks);
-
-    private final Section sectionWithPages1 = new Section("Test Section 1.1", notebookWithSections);
-    private final Section sectionWithPages2 = new Section("Test Section 1.2", notebookWithSections);
-    private final Section sectionWithoutPages = new Section("Test Section 1.3", notebookWithSections);
-
-    private final Page page111 = new Page("Test Page 1.1.1", "Page Contents", sectionWithPages1);
-    private final Page page112 = new Page("Test Page 1.1.2", "Page Contents", sectionWithPages1);
-    private final Page page121 = new Page("Test Page 1.1.3", "Page Contents", sectionWithPages2);
-
-    private final List<Page> section1Pages = List.of(page111, page112);
-    private final List<Page> section2Pages = List.of(page121);
-
     private final NonPersistentData nonPersistentData = new NonPersistentData();
 
     private boolean saved = false;
@@ -106,9 +102,9 @@ class TestData {
     }
 
     public void saveToRepositories(AppUserRepository appUserRepository,
-                     NotebookRepository notebookRepository,
-                     SectionRepository sectionRepository,
-                     PageRepository pageRepository) {
+                                   NotebookRepository notebookRepository,
+                                   SectionRepository sectionRepository,
+                                   PageRepository pageRepository) {
         appUserRepository.saveAll(getAppUsers());
         notebookRepository.saveAll(getNotebooks());
         sectionRepository.saveAll(getSections());
@@ -139,6 +135,9 @@ class TestData {
                 "Non-persistent Notebook",
                 section);
 
+        private NonPersistentData() {
+        }
+
         public AppUser appUser() {
             return appUser;
         }
@@ -153,9 +152,6 @@ class TestData {
 
         public Page page() {
             return page;
-        }
-
-        private NonPersistentData() {
         }
     }
 

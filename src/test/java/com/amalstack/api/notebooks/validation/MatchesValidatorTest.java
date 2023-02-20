@@ -104,10 +104,10 @@ class MatchesValidatorTest {
 
         message = placeholderHelper.replacePlaceholders(message,
                 placeholderName -> switch (placeholderName) {
-            case "field" -> matches.field();
-            case "otherField" -> matches.otherField();
-            default -> null;
-        });
+                    case "field" -> matches.field();
+                    case "otherField" -> matches.otherField();
+                    default -> null;
+                });
 
     }
 
