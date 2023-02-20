@@ -4,6 +4,7 @@ import com.amalstack.api.notebooks.dto.ErrorInfo;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
@@ -16,17 +17,18 @@ import java.util.stream.Stream;
 @ControllerAdvice
 public class MethodArgumentNotValidExceptionHandler extends ResponseEntityExceptionHandler {
 
+    @NonNull
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
-            MethodArgumentNotValidException ex,
-            HttpHeaders headers,
-            HttpStatus status,
-            WebRequest request) {
+            @NonNull MethodArgumentNotValidException ex,
+            @NonNull HttpHeaders headers,
+            @NonNull HttpStatus status,
+            @NonNull WebRequest request) {
 
         Map<String, String> errors = Stream.concat(
                 ex.getFieldErrors()
                         .stream()
-                        .map(e -> Map.entry(e.getField(),  e.getDefaultMessage())),
+                        .map(e -> Map.entry(e.getField(), e.getDefaultMessage())),
                 ex.getGlobalErrors()
                         .stream()
                         .map(e -> Map.entry(e.getObjectName(), e.getDefaultMessage()))
