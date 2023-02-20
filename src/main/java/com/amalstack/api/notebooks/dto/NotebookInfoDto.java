@@ -2,15 +2,23 @@ package com.amalstack.api.notebooks.dto;
 
 import com.amalstack.api.notebooks.model.Notebook;
 
+import java.time.LocalDateTime;
+import java.util.Collection;
+
 public record NotebookInfoDto(
         long id,
+        long userId,
         String name,
         String description,
-        long userId,
-        String username
-) {
-    public static NotebookInfoDto fromNotebook(Notebook notebook) {
-        var owner = notebook.getOwner();
-        return new NotebookInfoDto(notebook.getId(), notebook.getName(), notebook.getDescription(), owner.getId(), owner.getUsername());
+        LocalDateTime creationTime,
+        Collection<SectionInfoDto> sections) {
+
+    public static NotebookInfoDto fromNotebook(Notebook notebook, Collection<SectionInfoDto> sections) {
+        return new NotebookInfoDto(notebook.getId(),
+                notebook.getOwner().getId(),
+                notebook.getName(),
+                notebook.getDescription(),
+                notebook.getCreationTime(),
+                sections);
     }
 }
