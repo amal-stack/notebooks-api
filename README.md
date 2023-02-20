@@ -16,7 +16,8 @@ cd notebooks-api
 ```
 mvnw package
 ```
-3. Use the `java -jar` command to run the generated jar from the `target` subdirectory:
+3. Use the `java -jar` command to run the generated jar from the `target` subdirectory (Java 18 or newer):
 ```
 java -jar target/*.jar
 ```
+
