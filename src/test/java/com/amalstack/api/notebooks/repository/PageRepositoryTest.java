@@ -26,8 +26,9 @@ class PageRepositoryTest {
     @Autowired
     private AppUserRepository appUserRepository;
 
-    private Long section1Id;
     private TestData data;
+
+    private Long section1Id;
 
 
     @BeforeAll
@@ -42,6 +43,7 @@ class PageRepositoryTest {
         var pages = pageRepository.findBySectionId(section1Id);
 
         assertThat(pages).hasSize(data.getSection1Pages().size());
+
         assertThat(pages)
                 .extracting(p -> p.getSection().getId())
                 .allMatch(i -> section1Id.equals(i));
@@ -119,4 +121,5 @@ class PageRepositoryTest {
 
         assertThat(count).isZero();
     }
+
 }

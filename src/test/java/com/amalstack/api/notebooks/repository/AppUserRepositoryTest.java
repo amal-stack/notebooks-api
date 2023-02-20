@@ -36,6 +36,7 @@ class AppUserRepositoryTest {
         var foundAppUser = appUserRepository.findByUsername("found@example.com");
 
         assertThat(foundAppUser).isPresent();
+
         assertThat(foundAppUser.get().getUsername()).isEqualTo(appUser.getUsername());
         assertThat(foundAppUser.get().getName()).isEqualTo(appUser.getName());
         assertThat(foundAppUser.get().getPassword()).isEqualTo(appUser.getPassword());
@@ -46,6 +47,7 @@ class AppUserRepositoryTest {
     @Test
     void findByUsername_whenUserDoesNotExist_thenReturnedOptionalIsEmpty() {
         var foundAppUser = appUserRepository.findByUsername("notfound@example.com");
+
         assertThat(foundAppUser).isNotPresent();
     }
 }

@@ -21,14 +21,18 @@ import static org.mockito.Mockito.when;
 //@ExtendWith(MockitoExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class AppUserDetailsServiceTest {
+
     private static final String EXISTING_USERNAME = "test1@example.com";
     private static final String NON_EXISTING_USERNAME = "notfound@example.com";
+
     @Mock
     private AppUserRepository appUserRepository;
+
     @InjectMocks
     private AppUserDetailsService appUserDetailsService;
 
     private AutoCloseable closeable;
+
 
     @BeforeAll
     void initAll() {

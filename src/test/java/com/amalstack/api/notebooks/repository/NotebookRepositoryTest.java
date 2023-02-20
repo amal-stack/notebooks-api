@@ -18,6 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class NotebookRepositoryTest {
+
     @Autowired
     private NotebookRepository notebookRepository;
 
@@ -29,7 +30,9 @@ class NotebookRepositoryTest {
 
     @Autowired
     private AppUserRepository appUserRepository;
+
     private TestData data;
+
 
     @BeforeAll
     void setUp() {
@@ -42,7 +45,8 @@ class NotebookRepositoryTest {
         var appUserWithNotebooks = data.getAppUserWithNotebooks();
         var notebooks = notebookRepository.findByOwnerId(appUserWithNotebooks.getId());
 
-        assertThat(notebooks).hasSize(2);
+        assertThat(notebooks).hasSize(data.getNotebooks().size());
+
         assertThat(notebooks)
                 .extracting(notebook -> notebook.getOwner().getId())
                 .allMatch(i -> i.equals(appUserWithNotebooks.getId()));
@@ -75,6 +79,7 @@ class NotebookRepositoryTest {
                 appUserWithNotebooks.getUsername());
 
         assertThat(notebooks).hasSize(2);
+
         assertThat(notebooks)
                 .extracting(notebook -> notebook.getOwner().getUsername())
                 .allMatch(u -> u.equals(appUserWithNotebooks.getUsername()));
@@ -105,6 +110,7 @@ class NotebookRepositoryTest {
                 .getId());
 
         assertThat(sectionCount).isPresent();
+
         assertThat(sectionCount.get()).isEqualTo(3);
     }
 
@@ -114,6 +120,7 @@ class NotebookRepositoryTest {
                 data.getNotebookWithoutSections().getId());
 
         assertThat(sectionCount).isPresent();
+
         assertThat(sectionCount.get()).isZero();
     }
 
@@ -125,6 +132,7 @@ class NotebookRepositoryTest {
                 .getId());
 
         assertThat(sectionCount).isPresent();
+
         assertThat(sectionCount.get()).isZero();
     }
 
@@ -134,6 +142,7 @@ class NotebookRepositoryTest {
                 data.getNotebookWithSections().getId());
 
         assertThat(pageCount).isPresent();
+
         assertThat(pageCount.get()).isEqualTo(3);
     }
 
@@ -143,6 +152,7 @@ class NotebookRepositoryTest {
                 data.getNotebookWithoutSections().getId());
 
         assertThat(pageCount).isPresent();
+
         assertThat(pageCount.get()).isZero();
     }
 
@@ -155,6 +165,7 @@ class NotebookRepositoryTest {
         );
 
         assertThat(pageCount).isPresent();
+
         assertThat(pageCount.get()).isZero();
     }
 

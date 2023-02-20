@@ -14,9 +14,13 @@ import java.lang.annotation.*;
 @Repeatable(Matches.List.class)
 public @interface Matches {
     String field();
+
     String otherField();
+
     String message() default "{com.amalstack.api.notebooks.validation.constraints.Matches.message}";
+
     Class<?>[] groups() default {};
+
     Class<? extends Payload>[] payload() default {};
 
     @Documented
