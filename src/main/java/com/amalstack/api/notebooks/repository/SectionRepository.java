@@ -7,4 +7,6 @@ import java.util.Collection;
 
 public interface SectionRepository extends JpaRepository<Section, Long> {
     Collection<Section> findByNotebookId(long id);
+
+    int countByNotebookId(long id);
 }
