@@ -1,14 +1,14 @@
 package com.amalstack.api.notebooks.controller;
 
 import com.amalstack.api.notebooks.dto.SectionDto;
-import com.amalstack.api.notebooks.dto.SectionInfoDto;
+import com.amalstack.api.notebooks.dto.SectionSummaryDto;
 import com.amalstack.api.notebooks.exception.NotebookNotFoundByIdException;
-import com.amalstack.api.notebooks.validation.OwnershipGuard;
 import com.amalstack.api.notebooks.exception.SectionNotFoundByIdException;
 import com.amalstack.api.notebooks.model.Notebook;
 import com.amalstack.api.notebooks.model.Section;
 import com.amalstack.api.notebooks.repository.NotebookRepository;
 import com.amalstack.api.notebooks.repository.SectionRepository;
+import com.amalstack.api.notebooks.validation.OwnershipGuard;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
@@ -29,18 +29,18 @@ public class SectionsController {
     }
 
     @GetMapping("/{id}")
-    public SectionInfoDto get(@PathVariable long id, @AuthenticationPrincipal User user) {
+    public SectionSummaryDto get(@PathVariable long id, @AuthenticationPrincipal User user) {
         return sectionRepository
                 .findById(id)
                 .map(section -> {
                     OwnershipGuard.throwIfSectionNotOwned(user, section);
-                    return SectionInfoDto.fromSection(section);
+                    return SectionSummaryDto.fromSection(section);
                 })
                 .orElseThrow(() -> new SectionNotFoundByIdException(id));
     }
 
     @GetMapping("/notebook/{id}")
-    public Collection<SectionInfoDto> getByNotebookId(@PathVariable long id, @AuthenticationPrincipal User user) {
+    public Collection<SectionSummaryDto> getByNotebookId(@PathVariable long id, @AuthenticationPrincipal User user) {
         Notebook notebook = notebookRepository
                 .findById(id)
                 .orElseThrow(() -> new NotebookNotFoundByIdException(id));
@@ -50,12 +50,12 @@ public class SectionsController {
         return sectionRepository
                 .findByNotebookId(id)
                 .stream()
-                .map(SectionInfoDto::fromSection)
+                .map(SectionSummaryDto::fromSection)
                 .toList();
     }
 
     @PostMapping
-    public SectionInfoDto create(@RequestBody @Valid SectionDto sectionDto, @AuthenticationPrincipal User user) {
+    public SectionSummaryDto create(@RequestBody @Valid SectionDto sectionDto, @AuthenticationPrincipal User user) {
         var notebookId = sectionDto.notebookId();
         Notebook notebook = notebookRepository
                 .findById(notebookId)
@@ -65,13 +65,13 @@ public class SectionsController {
 
         Section section = sectionDto.toSection(notebook);
 
-        return SectionInfoDto.fromSection(sectionRepository.save(section));
+        return SectionSummaryDto.fromSection(sectionRepository.save(section));
     }
 
     @PutMapping("/{id}")
-    public SectionInfoDto update(@PathVariable long id,
-                                 @RequestBody @Valid SectionDto sectionDto,
-                                 @AuthenticationPrincipal User user) {
+    public SectionSummaryDto update(@PathVariable long id,
+                                    @RequestBody @Valid SectionDto sectionDto,
+                                    @AuthenticationPrincipal User user) {
         var notebookId = sectionDto.notebookId();
 
         Section section = sectionRepository
@@ -86,7 +86,7 @@ public class SectionsController {
 
         OwnershipGuard.throwIfSectionNotOwned(user, section);
 
-        return SectionInfoDto.fromSection(sectionRepository.save(section));
+        return SectionSummaryDto.fromSection(sectionRepository.save(section));
     }
 
     @DeleteMapping("/{id}")
