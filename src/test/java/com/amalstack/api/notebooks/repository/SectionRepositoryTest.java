@@ -17,17 +17,23 @@ import static org.assertj.core.api.Assertions.assertThat;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class SectionRepositoryTest {
-    @Autowired private SectionRepository sectionRepository;
 
-    @Autowired private AppUserRepository appUserRepository;
+    @Autowired
+    private SectionRepository sectionRepository;
 
-    @Autowired private NotebookRepository notebookRepository;
+    @Autowired
+    private AppUserRepository appUserRepository;
+
+    @Autowired
+    private NotebookRepository notebookRepository;
 
     @Autowired
     private PageRepository pageRepository;
 
     private TestData data;
+
     private long notebookId;
+
 
     @BeforeAll
     void init() {
@@ -35,7 +41,7 @@ class SectionRepositoryTest {
         data.saveToRepositories(appUserRepository, notebookRepository, sectionRepository, pageRepository);
 
         notebookId = notebookRepository.save(
-                data.getNotebookWithSections())
+                        data.getNotebookWithSections())
                 .getId();
     }
 

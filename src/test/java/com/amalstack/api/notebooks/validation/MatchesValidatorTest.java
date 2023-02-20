@@ -23,13 +23,19 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class MatchesValidatorTest {
+
     @Mock
     private Matches matches;
+
     @Mock
     private ConstraintValidatorContext constraintValidatorContext;
+
     private MatchesValidator matchesValidator;
+
     private AutoCloseable closeable;
+
     private Properties validationMessages;
+
 
     @BeforeAll
     void init() throws IOException {
@@ -104,10 +110,10 @@ class MatchesValidatorTest {
 
         message = placeholderHelper.replacePlaceholders(message,
                 placeholderName -> switch (placeholderName) {
-            case "field" -> matches.field();
-            case "otherField" -> matches.otherField();
-            default -> null;
-        });
+                    case "field" -> matches.field();
+                    case "otherField" -> matches.otherField();
+                    default -> null;
+                });
 
     }
 
