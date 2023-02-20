@@ -27,13 +27,13 @@ class AppUserRepositoryTest {
     @Test
     void findByUsername_whenSaved_thenFindsByUsername() {
         AppUser appUser = new AppUser(
-                "test1@example.com",
+                "found@example.com",
                 "Test User",
                 "password");
 
         var savedAppUser = appUserRepository.save(appUser);
 
-        var foundAppUser = appUserRepository.findByUsername("test1@example.com");
+        var foundAppUser = appUserRepository.findByUsername("found@example.com");
 
         assertThat(foundAppUser).isPresent();
         assertThat(foundAppUser.get().getUsername()).isEqualTo(appUser.getUsername());
