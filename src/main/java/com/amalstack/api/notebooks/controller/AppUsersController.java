@@ -48,6 +48,4 @@ public class AppUsersController {
                 .map(AppUserInfoDto::fromAppUser)
                 .orElseThrow(AppUserNotFoundException::new);
     }
-
-
 }

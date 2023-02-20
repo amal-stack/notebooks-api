@@ -7,4 +7,8 @@ import java.util.Collection;
 
 public interface PageRepository extends JpaRepository<Page, Long> {
     Collection<Page> findBySectionId(Long id);
+
+    int countBySectionId(Long id);
+
+    int countBySectionNotebookId(Long id);
 }
