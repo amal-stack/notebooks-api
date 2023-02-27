@@ -10,6 +10,7 @@ import com.amalstack.api.notebooks.repository.NotebookRepository;
 import com.amalstack.api.notebooks.repository.PageRepository;
 import com.amalstack.api.notebooks.repository.SectionRepository;
 import com.amalstack.api.notebooks.validation.OwnershipGuard;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
@@ -28,7 +29,8 @@ public class NotebooksController {
     private final SectionRepository sectionRepository;
     private final PageRepository pageRepository;
 
-    public NotebooksController(NotebookRepository notebookRepository, AppUserRepository userRepository,
+    public NotebooksController(NotebookRepository notebookRepository,
+                               AppUserRepository userRepository,
                                SectionRepository sectionRepository,
                                PageRepository pageRepository) {
         this.notebookRepository = notebookRepository;
@@ -40,6 +42,12 @@ public class NotebooksController {
 
     @GetMapping("/{id}")
     public NotebookInfoDto get(@PathVariable long id, @AuthenticationPrincipal User user) {
+        var notebook = notebookRepository
+                .findById(id)
+                .orElseThrow(() -> new NotebookNotFoundByIdException(id));
+
+        OwnershipGuard.throwIfNotebookNotOwned(user, notebook);
+
         Collection<Section> sections = sectionRepository.findByNotebookId(id);
         List<SectionInfoDto> sectionInfo = new ArrayList<>();
         sections.forEach(section -> {
@@ -49,13 +57,8 @@ public class NotebooksController {
                     .toList();
             sectionInfo.add(SectionInfoDto.fromSection(section, pages));
         });
-        return notebookRepository
-                .findById(id)
-                .map(notebook -> {
-                    OwnershipGuard.throwIfNotebookNotOwned(user, notebook);
-                    return NotebookInfoDto.fromNotebook(notebook, sectionInfo);
-                })
-                .orElseThrow(() -> new NotebookNotFoundByIdException(id));
+
+        return NotebookInfoDto.fromNotebook(notebook, sectionInfo);
     }
 
     @GetMapping("/user")
@@ -72,6 +75,7 @@ public class NotebooksController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public NotebookSummaryDto create(@Valid @RequestBody NotebookDto notebookDto, @AuthenticationPrincipal User user) {
         var username = user.getUsername();
         var appUser = userRepository
@@ -94,20 +98,22 @@ public class NotebooksController {
         Notebook notebook = notebookRepository
                 .findById(id)
                 .map(nb -> {
+                    OwnershipGuard.throwIfNotebookNotOwned(user, nb);
                     nb.setName(notebookDto.name());
                     nb.setDescription(notebookDto.description());
                     return nb;
                 })
-                .orElse(notebookDto.toNotebook(userRepository
-                        .findByUsername(user.getUsername())
-                        .orElseThrow(AppUserNotFoundException::new)));
-
-        OwnershipGuard.throwIfNotebookNotOwned(user, notebook);
-
+                .orElseGet(() -> {
+                    var nb = notebookDto.toNotebook(userRepository
+                            .findByUsername(user.getUsername())
+                            .orElseThrow(AppUserNotFoundException::new));
+                    nb.setId(id);
+                    return nb;
+                });
         var savedNotebook = notebookRepository.save(notebook);
+
         return NotebookSummaryDto.fromNotebook(savedNotebook);
     }
-
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id, @AuthenticationPrincipal User user) {
