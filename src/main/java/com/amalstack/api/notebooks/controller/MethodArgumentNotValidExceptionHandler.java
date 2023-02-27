@@ -17,6 +17,8 @@ import java.util.stream.Stream;
 @ControllerAdvice
 public class MethodArgumentNotValidExceptionHandler extends ResponseEntityExceptionHandler {
 
+    private final String ERROR_MESSAGE = "Validation failed";
+
     @NonNull
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
@@ -37,7 +39,7 @@ public class MethodArgumentNotValidExceptionHandler extends ResponseEntityExcept
                 Map.Entry::getValue
         ));
 
-        var response = new ErrorInfo<>(status, ex.getLocalizedMessage(), errors);
+        var response = new ErrorInfo<>(status, ERROR_MESSAGE, errors);
         return handleExceptionInternal(ex, response, headers, status, request);
     }
 }

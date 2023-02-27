@@ -27,15 +27,15 @@ public class AppUsersController {
     }
 
     @PostMapping
-    public AppUserInfoDto register(@RequestBody @Valid AppUserRegistrationDto appUserRegistrationDto) {
+    public AppUserInfoDto register(@RequestBody @Valid AppUserRegistrationDto registration) {
 
-        String username = appUserRegistrationDto.email();
+        String username = registration.email();
 
         if (repository.findByUsername(username).isPresent()) {
             throw new UsernameAlreadyExistsException(username);
         }
 
-        AppUser user = repository.save(appUserRegistrationDto.toUser(encoder));
+        AppUser user = repository.save(registration.toUser(encoder));
 
         return AppUserInfoDto.fromAppUser(user);
     }
