@@ -71,6 +71,18 @@ class MatchesValidatorTest {
     }
 
     @Test
+    void isValid_whenBothFieldsAreNull_thenReturnTrue() {
+        var registration = new AppUserRegistrationDto("test@example.com",
+                "Test User",
+                null,
+                null);
+
+        assertThat(
+                matchesValidator.isValid(registration, constraintValidatorContext))
+                .isTrue();
+    }
+
+    @Test
     void isValid_whenFieldsAreNotEqual_thenReturnFalse() {
 
         var registration = new AppUserRegistrationDto("test@example.com",
@@ -102,7 +114,8 @@ class MatchesValidatorTest {
     @Test
     @Disabled
     void isValid_whenInvalid_throwsWithDefaultErrorMessage() {
-        when(matches.message()).thenReturn("{com.amalstack.api.notebooks.validation.constraints.Matches.message}");
+        when(matches.message())
+                .thenReturn("{com.amalstack.api.notebooks.validation.constraints.Matches.message}");
 
         var placeholderHelper = new PropertyPlaceholderHelper("{", "}");
         String message = placeholderHelper.replacePlaceholders(
@@ -114,7 +127,6 @@ class MatchesValidatorTest {
                     case "otherField" -> matches.otherField();
                     default -> null;
                 });
-
     }
 
     @AfterAll

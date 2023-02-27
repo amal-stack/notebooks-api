@@ -8,14 +8,18 @@ import com.amalstack.api.notebooks.model.Section;
 import java.time.LocalDateTime;
 import java.util.List;
 
-class TestData {
+public class TestData {
+
+    public static final String APP_USER_WITH_NOTEBOOKS_USERNAME = "test1@example.com";
+    public static final String APP_USER_WITHOUT_NOTEBOOKS_USERNAME = "test2@example.com";
+
     private final AppUser appUserWithNotebooks = new AppUser(
-            "Test1@example.com",
+            APP_USER_WITH_NOTEBOOKS_USERNAME,
             "Test User With Notebooks",
             "password1"
     );
     private final AppUser appUserWithoutNotebooks = new AppUser(
-            "Test2@example.com",
+            APP_USER_WITHOUT_NOTEBOOKS_USERNAME,
             "Test User Without Notebooks",
             "password2"
     );
@@ -41,8 +45,36 @@ class TestData {
     private boolean saved = false;
 
     public TestData(String randomString) {
+        this(randomString, false);
+    }
+
+    public TestData(String randomString, boolean setIds) {
         // Prefix each username with the supplied random string
         getAppUsers().forEach(u -> u.setUsername(randomString + u.getUsername()));
+        if (setIds) {
+            setIds();
+        }
+    }
+
+    private void setIds() {
+        var appUsers = getAppUsers();
+        for (int i = 0; i < appUsers.size(); i++) {
+            appUsers.get(i).setId(i + 1L);
+        }
+        var notebooks = getNotebooks();
+        for (int i = 0; i < notebooks.size(); i++) {
+            notebooks.get(i).setId(i + 1L);
+        }
+
+        var sections = getSections();
+        for (int i = 0; i < sections.size(); i++) {
+            sections.get(i).setId(i + 1L);
+        }
+
+        var pages = getPages();
+        for (int i = 0; i < pages.size(); i++) {
+            pages.get(i).setId(i + 1L);
+        }
     }
 
     public NonPersistentData nonPersistent() {
@@ -116,7 +148,18 @@ class TestData {
         return saved;
     }
 
-    static class NonPersistentData {
+    public void initMocks(AppUserRepository appUserRepository,
+                          NotebookRepository notebookRepository,
+                          SectionRepository sectionRepository,
+                          PageRepository pageRepository) {
+        var initializer = new MockRepositoryInitializer(this);
+        initializer.initMocks(appUserRepository);
+        initializer.initMocks(notebookRepository);
+        initializer.initMocks(sectionRepository);
+        initializer.initMocks(pageRepository);
+    }
+
+    public static class NonPersistentData {
 
         private final AppUser appUser = new AppUser(-1L,
                 "nonpersistent@example.com",
@@ -156,3 +199,4 @@ class TestData {
     }
 
 }
+
