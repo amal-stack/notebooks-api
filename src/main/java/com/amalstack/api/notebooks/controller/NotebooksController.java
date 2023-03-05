@@ -93,7 +93,6 @@ public class NotebooksController {
     public NotebookSummaryDto update(@PathVariable long id,
                                      @Valid @RequestBody NotebookDto notebookDto,
                                      @AuthenticationPrincipal User user) {
-
         // Get or create notebook
         Notebook notebook = notebookRepository
                 .findById(id)

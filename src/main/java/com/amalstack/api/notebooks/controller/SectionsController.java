@@ -74,19 +74,25 @@ public class SectionsController {
     public SectionSummaryDto update(@PathVariable long id,
                                     @RequestBody @Valid SectionDto sectionDto,
                                     @AuthenticationPrincipal User user) {
+
         var notebookId = sectionDto.notebookId();
+        Notebook notebook = notebookRepository
+                .findById(notebookId)
+                .orElseThrow(() -> new NotebookNotFoundByIdException(notebookId));
+        OwnershipGuard.throwIfNotebookNotOwned(user, notebook);
 
         Section section = sectionRepository
                 .findById(id)
                 .map(sec -> {
                     OwnershipGuard.throwIfSectionNotOwned(user, sec);
                     sec.setName(sectionDto.name());
+                    if (sec.getNotebook().getId() != notebook.getId()) {
+                        sec.setNotebook(notebook);
+                    }
                     return sec;
                 })
                 .orElseGet(() -> {
-                    var sec = sectionDto.toSection(notebookRepository
-                            .findById(notebookId)
-                            .orElseThrow(() -> new NotebookNotFoundByIdException(notebookId)));
+                    var sec = sectionDto.toSection(notebook);
                     sec.setId(id);
                     return sec;
                 });
