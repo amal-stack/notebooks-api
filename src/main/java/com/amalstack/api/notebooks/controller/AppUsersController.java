@@ -6,6 +6,7 @@ import com.amalstack.api.notebooks.exception.AppUserNotFoundException;
 import com.amalstack.api.notebooks.exception.UsernameAlreadyExistsException;
 import com.amalstack.api.notebooks.model.AppUser;
 import com.amalstack.api.notebooks.repository.AppUserRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
@@ -27,6 +28,7 @@ public class AppUsersController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public AppUserInfoDto register(@RequestBody @Valid AppUserRegistrationDto registration) {
 
         String username = registration.email();

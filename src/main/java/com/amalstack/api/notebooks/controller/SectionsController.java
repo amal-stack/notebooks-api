@@ -79,6 +79,7 @@ public class SectionsController {
         Notebook notebook = notebookRepository
                 .findById(notebookId)
                 .orElseThrow(() -> new NotebookNotFoundByIdException(notebookId));
+
         OwnershipGuard.throwIfNotebookNotOwned(user, notebook);
 
         Section section = sectionRepository

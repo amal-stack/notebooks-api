@@ -8,8 +8,6 @@ import com.amalstack.api.notebooks.model.AppUser;
 import com.amalstack.api.notebooks.repository.AppUserRepository;
 import com.amalstack.api.notebooks.security.ApplicationSecurityConfiguration;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.AdditionalAnswers;
 import org.mockito.Mockito;
@@ -35,8 +33,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(AppUsersController.class)
 @Import(ApplicationSecurityConfiguration.class)
 @AutoConfigureMockMvc
-public class AppUsersControllerTest {
+class AppUsersControllerTest {
 
+    private static final String PATH = "/users";
     @Autowired
     private MockMvc mockMvc;
 
@@ -49,15 +48,6 @@ public class AppUsersControllerTest {
     @MockBean
     private PasswordEncoder passwordEncoder;
 
-
-    @BeforeEach
-    void init() {
-
-    }
-
-    @AfterEach
-    void tearDown() {
-    }
 
     @Test
     void register_whenUsernameAlreadyExists_thenBadRequest() throws Exception {
@@ -76,7 +66,7 @@ public class AppUsersControllerTest {
                 "password");
 
         mockMvc
-                .perform(post("/users")
+                .perform(post(PATH)
                         //.with(SecurityMockMvcRequestPostProcessors.csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(registration))
@@ -87,6 +77,7 @@ public class AppUsersControllerTest {
                 .andExpect(status().reason("Username already exists"))
                 .andExpect(result -> assertThat(result.getResolvedException())
                         .isInstanceOf(UsernameAlreadyExistsException.class)
+                        .hasFieldOrPropertyWithValue("username", existingUsername)
                         .hasMessage("The user with username %s already exists", existingUsername)
                 );
     }
@@ -101,7 +92,7 @@ public class AppUsersControllerTest {
                 "password-non-matching");
 
         mockMvc
-                .perform(post("/users")
+                .perform(post(PATH)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(registration))
                 )
@@ -134,11 +125,12 @@ public class AppUsersControllerTest {
                 .then(AdditionalAnswers.returnsFirstArg());
 
         mockMvc
-                .perform(post("/users")
+                .perform(post(PATH)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(registration))
                 )
-                .andExpect(status().isOk())
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().string(objectMapper.writeValueAsString(appUserInfo)));
 
@@ -160,7 +152,7 @@ public class AppUsersControllerTest {
         AppUserInfoDto expected = new AppUserInfoDto(1L, username, "Test User");
 
         mockMvc
-                .perform(get("/users"))
+                .perform(get(PATH))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -176,10 +168,9 @@ public class AppUsersControllerTest {
                 .thenReturn(Optional.empty());
 
         mockMvc
-                .perform(get("/users"))
+                .perform(get(PATH))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isNotFound())
-                //.andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().reason("User not found"))
                 .andExpect(result -> assertThat(result.getResolvedException())
                         .isInstanceOf(AppUserNotFoundException.class)
