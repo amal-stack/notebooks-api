@@ -5,7 +5,7 @@ import com.amalstack.api.notebooks.model.Page;
 import java.io.Serializable;
 
 public record PageInfoDto(
-        long id,
+        Long id,
         String title,
         String content,
         long sectionId

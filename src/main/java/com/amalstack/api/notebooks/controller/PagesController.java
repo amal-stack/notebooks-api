@@ -9,6 +9,7 @@ import com.amalstack.api.notebooks.model.Section;
 import com.amalstack.api.notebooks.repository.PageRepository;
 import com.amalstack.api.notebooks.repository.SectionRepository;
 import com.amalstack.api.notebooks.validation.OwnershipGuard;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
@@ -55,6 +56,7 @@ public class PagesController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public PageInfoDto create(@RequestBody @Valid PageDto pageDto, @AuthenticationPrincipal User user) {
         var sectionId = pageDto.sectionId();
 
@@ -73,18 +75,29 @@ public class PagesController {
                               @RequestBody @Valid PageDto pageDto,
                               @AuthenticationPrincipal User user) {
 
+        Section section = sectionRepository
+                .findById(pageDto.sectionId())
+                .orElseThrow(() -> new SectionNotFoundByIdException(pageDto.sectionId()));
+
+        OwnershipGuard.throwIfSectionNotOwned(user, section);
+
         Page page = pageRepository
                 .findById(id)
                 .map(p -> {
+                    OwnershipGuard.throwIfPageNotOwned(user, p);
                     p.setContent(pageDto.content());
                     p.setTitle(pageDto.title());
+                    // update section if different
+                    if (!p.getSection().getId().equals(section.getId())) {
+                        p.setSection(section);
+                    }
                     return p;
                 })
-                .orElse(pageDto.toPage(sectionRepository
-                        .findById(pageDto.sectionId())
-                        .orElseThrow(() -> new SectionNotFoundByIdException(pageDto.sectionId()))));
-
-        OwnershipGuard.throwIfPageNotOwned(user, page);
+                .orElseGet(() -> {
+                    var p = pageDto.toPage(section);
+                    p.setId(id);
+                    return p;
+                });
 
         return PageInfoDto.fromPage(pageRepository.save(page));
     }

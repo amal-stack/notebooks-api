@@ -5,7 +5,7 @@ import com.amalstack.api.notebooks.model.Section;
 import java.io.Serializable;
 
 public record SectionSummaryDto(
-        long id,
+        Long id,
         String name,
         long notebookId) implements Serializable {
     public static SectionSummaryDto fromSection(Section section) {

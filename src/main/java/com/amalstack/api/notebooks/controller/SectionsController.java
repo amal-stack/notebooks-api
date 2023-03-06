@@ -9,6 +9,7 @@ import com.amalstack.api.notebooks.model.Section;
 import com.amalstack.api.notebooks.repository.NotebookRepository;
 import com.amalstack.api.notebooks.repository.SectionRepository;
 import com.amalstack.api.notebooks.validation.OwnershipGuard;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
@@ -55,6 +56,7 @@ public class SectionsController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public SectionSummaryDto create(@RequestBody @Valid SectionDto sectionDto, @AuthenticationPrincipal User user) {
         var notebookId = sectionDto.notebookId();
         Notebook notebook = notebookRepository
@@ -72,19 +74,29 @@ public class SectionsController {
     public SectionSummaryDto update(@PathVariable long id,
                                     @RequestBody @Valid SectionDto sectionDto,
                                     @AuthenticationPrincipal User user) {
+
         var notebookId = sectionDto.notebookId();
+        Notebook notebook = notebookRepository
+                .findById(notebookId)
+                .orElseThrow(() -> new NotebookNotFoundByIdException(notebookId));
+
+        OwnershipGuard.throwIfNotebookNotOwned(user, notebook);
 
         Section section = sectionRepository
                 .findById(id)
                 .map(sec -> {
+                    OwnershipGuard.throwIfSectionNotOwned(user, sec);
                     sec.setName(sectionDto.name());
+                    if (sec.getNotebook().getId() != notebook.getId()) {
+                        sec.setNotebook(notebook);
+                    }
                     return sec;
                 })
-                .orElse(sectionDto.toSection(notebookRepository
-                        .findById(notebookId)
-                        .orElseThrow(() -> new NotebookNotFoundByIdException(notebookId))));
-
-        OwnershipGuard.throwIfSectionNotOwned(user, section);
+                .orElseGet(() -> {
+                    var sec = sectionDto.toSection(notebook);
+                    sec.setId(id);
+                    return sec;
+                });
 
         return SectionSummaryDto.fromSection(sectionRepository.save(section));
     }

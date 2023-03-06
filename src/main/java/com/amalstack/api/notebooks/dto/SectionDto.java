@@ -3,11 +3,12 @@ package com.amalstack.api.notebooks.dto;
 import com.amalstack.api.notebooks.model.Notebook;
 import com.amalstack.api.notebooks.model.Section;
 
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 public record SectionDto(
         long notebookId,
-        String name) implements Serializable {
+        @NotBlank String name) implements Serializable {
     public Section toSection(Notebook notebook) {
         return new Section(name, notebook);
     }
