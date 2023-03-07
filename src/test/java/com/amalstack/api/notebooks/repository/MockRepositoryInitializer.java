@@ -25,14 +25,10 @@ public class MockRepositoryInitializer extends MockRepositoryInitializerBase {
 
     public void initMocks(NotebookRepository notebookRepository) {
 
-        Mockito.when(notebookRepository
-                        .findById(testData.getNotebookWithSections().getId()))
+        testData.getNotebooks().forEach(notebook -> Mockito.when(notebookRepository
+                        .findById(notebook.getId()))
                 .thenReturn(Optional
-                        .of(testData.getNotebookWithSections()));
-        Mockito.when(notebookRepository
-                        .findById(testData.getNotebookWithoutSections().getId()))
-                .thenReturn(Optional
-                        .of(testData.getNotebookWithoutSections()));
+                        .of(notebook)));
 
         Mockito.when(notebookRepository
                         .findByOwnerUsername(testData.getAppUserWithNotebooks().getUsername()))
@@ -57,6 +53,10 @@ public class MockRepositoryInitializer extends MockRepositoryInitializerBase {
                         .countSectionPages(testData.getNotebookWithoutSections().getId()))
                 .thenReturn(Optional.of(0));
 
+        Mockito.when(notebookRepository
+                        .findById(testData.unowned().notebook().getId()))
+                .thenReturn(Optional.of(testData.unowned().notebook()));
+
         super.initMocks(notebookRepository);
     }
 
@@ -67,6 +67,15 @@ public class MockRepositoryInitializer extends MockRepositoryInitializerBase {
         Mockito.when(sectionRepository
                         .findByNotebookId(testData.getNotebookWithoutSections().getId()))
                 .thenReturn(Collections.emptyList());
+
+        testData.getSections().forEach(section -> Mockito
+                .when(sectionRepository
+                        .findById(section.getId()))
+                .thenReturn(Optional.of(section)));
+
+        Mockito.when(sectionRepository
+                        .findById(testData.unowned().section().getId()))
+                .thenReturn(Optional.of(testData.unowned().section()));
 
         super.initMocks(sectionRepository);
     }
@@ -82,8 +91,15 @@ public class MockRepositoryInitializer extends MockRepositoryInitializerBase {
                         .findBySectionId(testData.getSectionWithoutPages().getId()))
                 .thenReturn(Collections.emptyList());
 
+        testData.getPages().forEach(page -> Mockito
+                .when(pageRepository
+                        .findById(page.getId()))
+                .thenReturn(Optional.of(page)));
+
+        Mockito.when(pageRepository
+                        .findById(testData.unowned().page().getId()))
+                .thenReturn(Optional.of(testData.unowned().page()));
+
         super.initMocks(pageRepository);
     }
-
-
 }

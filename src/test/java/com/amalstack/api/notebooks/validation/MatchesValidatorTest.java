@@ -1,6 +1,5 @@
 package com.amalstack.api.notebooks.validation;
 
-import com.amalstack.api.notebooks.NotebooksApiApplication;
 import com.amalstack.api.notebooks.dto.AppUserRegistrationDto;
 import com.amalstack.api.notebooks.validation.constraints.Matches;
 import org.junit.jupiter.api.*;
@@ -10,11 +9,8 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.InvalidPropertyException;
-import org.springframework.util.PropertyPlaceholderHelper;
 
 import javax.validation.ConstraintValidatorContext;
-import java.io.IOException;
-import java.util.Properties;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -34,17 +30,10 @@ class MatchesValidatorTest {
 
     private AutoCloseable closeable;
 
-    private Properties validationMessages;
-
 
     @BeforeAll
-    void init() throws IOException {
+    void init() {
         closeable = MockitoAnnotations.openMocks(this);
-
-        validationMessages = new Properties();
-        final String validationMessagesPropertiesFile = "/ValidationMessages.properties";
-        validationMessages.load(NotebooksApiApplication.class
-                .getResourceAsStream(validationMessagesPropertiesFile));
     }
 
     @BeforeEach
@@ -111,26 +100,10 @@ class MatchesValidatorTest {
                 .isThrownBy(() -> matchesValidator.isValid(registration, constraintValidatorContext));
     }
 
-    @Test
-    @Disabled
-    void isValid_whenInvalid_throwsWithDefaultErrorMessage() {
-        when(matches.message())
-                .thenReturn("{com.amalstack.api.notebooks.validation.constraints.Matches.message}");
-
-        var placeholderHelper = new PropertyPlaceholderHelper("{", "}");
-        String message = placeholderHelper.replacePlaceholders(
-                matches.message(), validationMessages);
-
-        message = placeholderHelper.replacePlaceholders(message,
-                placeholderName -> switch (placeholderName) {
-                    case "field" -> matches.field();
-                    case "otherField" -> matches.otherField();
-                    default -> null;
-                });
-    }
-
     @AfterAll
     void releaseMocks() throws Exception {
         closeable.close();
     }
 }
+
+
