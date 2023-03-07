@@ -1,9 +1,9 @@
 package com.amalstack.api.notebooks.validation.constraints;
 
 import com.amalstack.api.notebooks.validation.MatchesValidator;
+import jakarta.validation.Constraint;
+import jakarta.validation.Payload;
 
-import javax.validation.Constraint;
-import javax.validation.Payload;
 import java.lang.annotation.*;
 
 @SuppressWarnings("unused")

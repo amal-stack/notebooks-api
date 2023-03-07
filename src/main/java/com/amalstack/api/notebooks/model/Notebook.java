@@ -1,6 +1,7 @@
 package com.amalstack.api.notebooks.model;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 import java.util.Objects;
 

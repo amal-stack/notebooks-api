@@ -9,13 +9,13 @@ import com.amalstack.api.notebooks.model.Section;
 import com.amalstack.api.notebooks.repository.PageRepository;
 import com.amalstack.api.notebooks.repository.SectionRepository;
 import com.amalstack.api.notebooks.validation.OwnershipGuard;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.Collection;
 
 @RestController

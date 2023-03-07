@@ -1,6 +1,6 @@
 package com.amalstack.api.notebooks.model;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 public class Page {
