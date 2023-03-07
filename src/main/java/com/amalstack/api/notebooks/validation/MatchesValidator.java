@@ -1,10 +1,9 @@
 package com.amalstack.api.notebooks.validation;
 
 import com.amalstack.api.notebooks.validation.constraints.Matches;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.beans.BeanWrapperImpl;
-
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
 
 public class MatchesValidator implements ConstraintValidator<Matches, Object> {
     private String fieldName;

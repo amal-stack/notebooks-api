@@ -6,14 +6,13 @@ import com.amalstack.api.notebooks.exception.AppUserNotFoundException;
 import com.amalstack.api.notebooks.exception.UsernameAlreadyExistsException;
 import com.amalstack.api.notebooks.model.AppUser;
 import com.amalstack.api.notebooks.repository.AppUserRepository;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
 
 @RestController
 @RequestMapping(value = "users", produces = MediaType.APPLICATION_JSON_VALUE)
