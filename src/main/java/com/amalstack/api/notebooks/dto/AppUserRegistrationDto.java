@@ -2,10 +2,10 @@ package com.amalstack.api.notebooks.dto;
 
 import com.amalstack.api.notebooks.model.AppUser;
 import com.amalstack.api.notebooks.validation.constraints.Matches;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 @Matches(

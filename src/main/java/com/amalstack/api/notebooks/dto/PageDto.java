@@ -2,8 +2,8 @@ package com.amalstack.api.notebooks.dto;
 
 import com.amalstack.api.notebooks.model.Page;
 import com.amalstack.api.notebooks.model.Section;
+import jakarta.validation.constraints.NotBlank;
 
-import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 public record PageDto(

@@ -2,8 +2,8 @@ package com.amalstack.api.notebooks.dto;
 
 import com.amalstack.api.notebooks.model.AppUser;
 import com.amalstack.api.notebooks.model.Notebook;
+import jakarta.validation.constraints.NotBlank;
 
-import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 

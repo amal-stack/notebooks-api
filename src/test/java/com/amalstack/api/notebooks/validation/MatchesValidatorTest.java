@@ -2,6 +2,7 @@ package com.amalstack.api.notebooks.validation;
 
 import com.amalstack.api.notebooks.dto.AppUserRegistrationDto;
 import com.amalstack.api.notebooks.validation.constraints.Matches;
+import jakarta.validation.ConstraintValidatorContext;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -10,7 +11,10 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.InvalidPropertyException;
 
-import javax.validation.ConstraintValidatorContext;
+
+import java.io.IOException;
+import java.util.Properties;
+
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
