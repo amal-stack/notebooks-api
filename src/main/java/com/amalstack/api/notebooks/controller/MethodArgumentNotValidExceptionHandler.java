@@ -2,7 +2,7 @@ package com.amalstack.api.notebooks.controller;
 
 import com.amalstack.api.notebooks.dto.ErrorInfo;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -20,12 +20,12 @@ public class MethodArgumentNotValidExceptionHandler extends ResponseEntityExcept
 
     final String ERROR_MESSAGE = "Validation failed";
 
-    @NonNull
+
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
             @NonNull MethodArgumentNotValidException ex,
             @NonNull HttpHeaders headers,
-            @NonNull HttpStatus status,
+            @NonNull HttpStatusCode status,
             @NonNull WebRequest request) {
         Map<String, String> errors = Stream.concat(
                 ex.getFieldErrors()
