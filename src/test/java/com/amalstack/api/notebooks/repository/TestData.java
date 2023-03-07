@@ -24,6 +24,7 @@ public class TestData {
             "password2"
     );
 
+
     private final Notebook notebookWithSections = new Notebook("Test Notebook 1",
             "Test Notebook Description",
             LocalDateTime.now(),
@@ -40,9 +41,13 @@ public class TestData {
             "Test Notebook Description",
             LocalDateTime.now(),
             appUserWithNotebooks);
+
     private final NonPersistentData nonPersistentData = new NonPersistentData();
 
+    private final UnownedResources unownedResources = new UnownedResources();
+
     private boolean saved = false;
+
 
     public TestData(String randomString) {
         this(randomString, false);
@@ -81,6 +86,10 @@ public class TestData {
         return nonPersistentData;
     }
 
+    public UnownedResources unowned() {
+        return unownedResources;
+    }
+
     public AppUser getAppUserWithNotebooks() {
         return appUserWithNotebooks;
     }
@@ -115,6 +124,18 @@ public class TestData {
 
     public List<Page> getSection2Pages() {
         return section2Pages;
+    }
+
+    public Page getPage1OfSection1() {
+        return page111;
+    }
+
+    public Page getPage2OfSection1() {
+        return page112;
+    }
+
+    public Page getPage1OfSection2() {
+        return page121;
     }
 
     public List<AppUser> getAppUsers() {
@@ -161,16 +182,18 @@ public class TestData {
 
     public static class NonPersistentData {
 
-        private final AppUser appUser = new AppUser(-1L,
+        private final Long NON_PERSISTENT_ID = -1L;
+
+        private final AppUser appUser = new AppUser(NON_PERSISTENT_ID,
                 "nonpersistent@example.com",
                 "Non-persistent User",
                 "password");
-        private final Notebook notebook = new Notebook(-1L,
+        private final Notebook notebook = new Notebook(NON_PERSISTENT_ID,
                 "Non-persistent Notebook",
                 "Non-persistent Notebook",
                 LocalDateTime.now(),
                 appUser);
-        private final Section section = new Section(-1L,
+        private final Section section = new Section(NON_PERSISTENT_ID,
                 "Non-persistent Section",
                 notebook);
         private final Page page = new Page(-1L,
@@ -198,5 +221,46 @@ public class TestData {
         }
     }
 
+    public static class UnownedResources {
+        private final Long UNOWNED_RESOURCE_ID = -2L;
+
+        private final Notebook notebook = new Notebook(UNOWNED_RESOURCE_ID,
+                "Unowned Notebook",
+                "Unowned Notebook",
+                LocalDateTime.now(),
+                null) {
+            @Override
+            public AppUser getOwner() {
+                return new AppUser(-2L,
+                        "temp@example.com",
+                        "Temporary User",
+                        "temp");
+            }
+        };
+
+        private final Section section = new Section(UNOWNED_RESOURCE_ID,
+                "Unowned Section",
+                notebook);
+
+        private final Page page = new Page(UNOWNED_RESOURCE_ID,
+                "Unowned Page",
+                "Unowned Page",
+                section);
+
+        private UnownedResources() {
+        }
+
+        public Notebook notebook() {
+            return notebook;
+        }
+
+        public Section section() {
+            return section;
+        }
+
+        public Page page() {
+            return page;
+        }
+    }
 }
 
