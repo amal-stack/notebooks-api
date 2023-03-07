@@ -3,15 +3,15 @@ package com.amalstack.api.notebooks.validation;
 import com.amalstack.api.notebooks.NotebooksApiApplication;
 import com.amalstack.api.notebooks.dto.AppUserRegistrationDto;
 import com.amalstack.api.notebooks.validation.constraints.Matches;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
 import org.springframework.util.PropertyPlaceholderHelper;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
 import java.io.IOException;
 import java.util.Properties;
 import java.util.Set;
@@ -30,7 +30,9 @@ class MatchesValidatorIntegrationTest {
     void initEach() throws IOException {
         closeable = MockitoAnnotations.openMocks(this);
 
-        validator = Validation.buildDefaultValidatorFactory().getValidator();
+        try (var factory = Validation.buildDefaultValidatorFactory()) {
+            validator = factory.getValidator();
+        }
 
         validationMessages = new Properties();
         final String validationMessagesPropertiesFile = "/ValidationMessages.properties";
