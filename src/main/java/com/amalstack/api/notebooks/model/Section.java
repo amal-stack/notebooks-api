@@ -1,6 +1,8 @@
 package com.amalstack.api.notebooks.model;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 public class Section {
@@ -13,6 +15,7 @@ public class Section {
     private String name;
 
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "notebook_id")
     private Notebook notebook;
 

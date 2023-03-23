@@ -1,6 +1,8 @@
 package com.amalstack.api.notebooks.model;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 public class Page {
@@ -14,6 +16,7 @@ public class Page {
     private String content;
 
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "section_id")
     private Section section;
 
