@@ -1,6 +1,8 @@
 package com.amalstack.api.notebooks.model;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 public class PageBookmark {
@@ -14,6 +16,7 @@ public class PageBookmark {
     private Page page;
 
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "user_id")
     private AppUser user;
 

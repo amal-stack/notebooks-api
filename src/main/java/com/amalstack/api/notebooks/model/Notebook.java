@@ -1,6 +1,8 @@
 package com.amalstack.api.notebooks.model;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -21,6 +23,7 @@ public class Notebook {
     private LocalDateTime creationTime;
 
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "app_user_id")
     private AppUser owner;
 
@@ -30,6 +33,7 @@ public class Notebook {
     public Notebook(long id, String name, String description, LocalDateTime creationTime, AppUser owner) {
         this.id = id;
         this.name = name;
+        this.description = description;
         this.creationTime = creationTime;
         this.owner = owner;
     }
