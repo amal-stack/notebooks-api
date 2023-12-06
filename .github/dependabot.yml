@@ -11,3 +11,10 @@ updates:
       interval: "weekly"
     assignees:
       - "amal-stack"
+
+  - package-ecosystem: "github-actions" 
+    directory: "/" # Location of package manifests
+    schedule:
+      interval: "weekly"
+    assignees:
+      - "amal-stack"
